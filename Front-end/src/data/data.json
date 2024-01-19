@@ -1,0 +1,36 @@
+{
+    "temperatureData": [
+      {"timestamp": "1", "value": 25},
+      {"timestamp": "2", "value": 26},
+      {"timestamp": "3", "value": 24},
+      {"timestamp": "4", "value": -5},
+      {"timestamp": "5", "value": 4},
+      {"timestamp": "6", "value": 7},
+      {"timestamp": "7", "value": 33},
+      {"timestamp": "8", "value": 40},
+      {"timestamp": "9", "value": 45}
+    ],
+    "humidityData": [
+      {"timestamp": "1", "value": 60},
+      {"timestamp": "2", "value": 65},
+      {"timestamp": "3", "value": 55},
+      {"timestamp": "4", "value": 30},
+      {"timestamp": "5", "value": 45},
+      {"timestamp": "6", "value": 75},
+      {"timestamp": "7", "value": 90},
+      {"timestamp": "8", "value": 65},
+      {"timestamp": "9", "value": 55}
+    ],
+    "brightnessData": [
+      {"timestamp": "1", "value": 800},
+      {"timestamp": "2", "value": 850},
+      {"timestamp": "3", "value": 780},
+      {"timestamp": "4", "value": 1000},
+      {"timestamp": "5", "value": 1850},
+      {"timestamp": "6", "value": 2780},
+      {"timestamp": "7", "value": 1030},
+      {"timestamp": "8", "value": 1250},
+      {"timestamp": "9", "value": 80}
+    ]
+  }
+  

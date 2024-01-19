@@ -1,0 +1,9 @@
+.chart{
+    width: 65.5rem;
+    height: 30rem;
+    margin: 0.5rem 2rem;
+    border-radius: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
