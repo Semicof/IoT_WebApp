@@ -1,0 +1,60 @@
+.tableContainer {
+}
+
+.myTable {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1rem;
+  min-width: 100%;
+}
+
+.myTable th,
+.myTable td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+}
+
+.myTable th {
+  background-color: coral;
+  text-align: center;
+  font-size: 1.2rem;
+  color: rgb(255, 255, 255);
+}
+
+.myTable tr:nth-child(even) {
+  background-color: #e4e2e2;
+}
+
+.myTable tr:hover {
+  background-color: #f5f5f5;
+}
+
+.myTable td {
+  text-align: center;
+}
+
+.paginationButtons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.paginationButtons button {
+  background-color: coral;
+  color: white;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.paginationButtons button:hover {
+  background-color: rgb(229, 62, 1);
+}
+
+.paginationButtons span {
+  font-size: 1rem;
+  margin: 0 2rem;
+}
