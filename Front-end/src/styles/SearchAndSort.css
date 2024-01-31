@@ -1,0 +1,27 @@
+#search{
+    width: 40%;
+    height: 2rem;
+    border: none;
+    border-bottom: 1px solid black;
+    text-indent: 0.5rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+}
+
+#search:focus{
+    outline: none;
+    border-bottom: 1px solid rgb(255, 68, 0);
+}
+
+#sort{
+    margin-bottom: 1rem;
+    margin-right: 2rem;
+}
+
+select:focus{
+    border-color: rgb(255, 68, 0);
+}
+
+#order{
+
+}
