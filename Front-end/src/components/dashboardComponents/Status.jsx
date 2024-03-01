@@ -4,9 +4,9 @@ import "../../styles/Status.css";
 function getStatusGradient(value, name) {
   const thresholds = {
     temperature: {
-      low: 15,
-      medium: 25,
-      high: 35,
+      low: 10,
+      medium: 20,
+      high: 30,
     },
     humidity: {
       low: 30,
@@ -14,9 +14,9 @@ function getStatusGradient(value, name) {
       high: 70,
     },
     brightness: {
-      low: 5000,
-      medium: 30000,
-      high: 80000,
+      low: 10,
+      medium: 100,
+      high: 124,
     },
   };
 
@@ -59,15 +59,15 @@ function Status({ name, data }) {
   switch (name) {
     case "temperature":
       imgSrc = "/imgs/status/temperature.png";
-      label = `${data.toFixed(2)} °C`;
+      label = `${data} °C`;
       break;
     case "humidity":
       imgSrc = "/imgs/status/humidity.png";
-      label = `${data.toFixed(2)} %`;
+      label = `${data} %`;
       break;
     case "brightness":
       imgSrc = "/imgs/status/brightness.png";
-      label = `${data.toFixed(2)} Lux`;
+      label = `${data} Lux`;
       break;
     default:
       break;

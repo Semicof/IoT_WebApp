@@ -1,5 +1,5 @@
 import React from "react";
-import "./styles/Profile.css"
+import "./styles/Profile.css";
 
 function Profile() {
   const info = {
@@ -19,9 +19,10 @@ function Profile() {
     ],
   };
 
-  const getImgSrc = (name)=>{
-    return `/imgs/sIcons/${name}.png`
-  }
+  const getImgSrc = (name) => {
+    return `/imgs/sIcons/${name}.png`;
+  };
+  
   return (
     <div className="pContainer">
       <div className="imgContainer">
@@ -32,7 +33,18 @@ function Profile() {
         <span>{"Date of birth: " + info.dob}</span>
         <span>{"Live in: " + info.address}</span>
         <span>{"Phone number: " + info.pNum}</span>
-        <span>Socials: <div className="sContainer">{ info.social.map((s) => {return <a href={s.link} className="sLink"><img src={getImgSrc(s.name)} alt="" className="sImg"/></a>})}</div></span>
+        <span>
+          Socials:{" "}
+          <div className="sContainer">
+            {info.social.map((s) => {
+              return (
+                <a href={s.link} className="sLink">
+                  <img src={getImgSrc(s.name)} alt="" className="sImg" />
+                </a>
+              );
+            })}
+          </div>
+        </span>
       </div>
     </div>
   );
