@@ -9,7 +9,9 @@ import {
   Tooltip,
   Legend,
   SubTitle,
+  TimeScale
 } from "chart.js";
+import "chartjs-adapter-moment"
 import { Line } from "react-chartjs-2";
 import "../../styles/StatusChart.css";
 
@@ -20,17 +22,19 @@ ChartJS.register(
   LineElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  TimeScale
 );
 
 const StatusChart = ({ allData }) => {
+  const latestData = allData.slice(-20);
   const options = {
     responsive: true,
     plugins: {
       legend: {
         position: "bottom",
         labels: {
-          color: "black", // Change legend label color here
+          color: "black",
         },
       },
       title: {
@@ -41,34 +45,50 @@ const StatusChart = ({ allData }) => {
     },
     scales: {
       x: {
+        type: 'time',
+        time: {
+          tooltipFormat:'MM/DD/YYYY',
+          displayFormats: {
+             'millisecond':'HH:mm:ss',
+             'second': 'HH:mm:ss',
+             'minute': 'HH:mm:ss',
+             'hour': 'HH:mm:ss',
+             'day': 'HH:mm:ss',
+             'week': 'HH:mm:ss',
+             'month': 'HH:mm:ss',
+             'quarter': 'HH:mm:ss',
+             'year': 'HH:mm:ss',
+          }
+        },
         title: {
-          color: "black", // Change x-axis label color here
+          color: "black",
+          text: 'Date'
         },
         ticks: {
-          color: "black", // Change x-axis tick color here
+          color: "black",
         },
       },
       y: {
         title: {
-          color: "black", // Change y-axis label color here
+          color: "black",
         },
         ticks: {
-          color: "black", // Change y-axis tick color here
+          color: "black",
         },
       },
     },
   };
-  const temperatureData = allData.map((data) => ({
+  const temperatureData = latestData.map((data) => ({
     timestamp: data.date,
     value: data.temperatureData,
   }));
 
-  const humidityData = allData.map((data) => ({
+  const humidityData = latestData.map((data) => ({
     timestamp: data.date,
     value: data.humidityData,
   }));
 
-  const brightnessData = allData.map((data) => ({
+  const brightnessData = latestData.map((data) => ({
     timestamp: data.date,
     value: data.brightnessData,
   }));

@@ -20,8 +20,8 @@ function Button({ onClick, name, state }) {
       useEffect(() => {
         setImgSrc(
           state === "On"
-            ? "/imgs/adjustments/lightOn.png"
-            : "/imgs/adjustments/lightOff.png"
+            ? "/imgs/adjustments/lightO.png"
+            : "/imgs/adjustments/lightOf.png"
         );
         setLabel(state === "Off" ? "Off" : "On");
         setBackgroundColor(state === "Off"?"coral":"forestgreen");

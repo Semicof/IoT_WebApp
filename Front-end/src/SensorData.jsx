@@ -9,7 +9,6 @@ function SensorData() {
       <PaginationTable
         endpoint={"sensor_data"}
         headers={["ID", "Temperature", "Humidity", "Brightness", "Time"]}
-        sortableColumns={["ID", "Temperature", "Humidity", "Brightness", "Time"]}
       />
     </div>
   );

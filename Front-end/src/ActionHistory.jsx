@@ -9,7 +9,6 @@ function ActionHistory() {
       <PaginationTable
         endpoint={"action_history"}
         headers={["ID", "Device", "Action", "Time"]}
-        sortableColumns={["ID", "Device", "Action", "Time"]}
       />
     </div>
   );

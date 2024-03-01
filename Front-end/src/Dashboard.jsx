@@ -7,19 +7,25 @@ import axios from "axios";
 
 function Dashboard() {
   const [allData, setAllData] = useState([]);
+  const [sensorData, setSensorData] = useState({
+    temperature: 0,
+    humidity: 0,
+    brightness: 0,
+  });
 
   const fetchData = async () => {
     try {
       const response = await axios.get(
-        "http://api.weatherapi.com/v1/forecast.json?key=6c96119eb87d4325a7d21001242201&q=93501&days=14"
+        "http://localhost:4000/api/v1/get_all"
       );
-      const newData = response.data.forecast.forecastday.map((dataObj) => ({
-        date: dataObj.date,
-        temperatureData: dataObj.day.avgtemp_c,
-        humidityData: dataObj.day.avghumidity,
-        brightnessData: dataObj.day.uv,
+      const newData = response.data.map((dataObj) => ({
+        temperatureData: dataObj.temperature,
+        humidityData: dataObj.humidity,
+        brightnessData: dataObj.brightness,
+        date:dataObj.time
       }));
       setAllData(newData);
+      console.log(newData);
     } catch (error) {
       console.error(error);
     }
@@ -28,46 +34,87 @@ function Dashboard() {
   useEffect(() => {
     fetchData();
 
-    const intervalId = setInterval(fetchData, 10000);
+    const intervalId = setInterval(fetchData, 5000);
 
     return () => {
       clearInterval(intervalId);
+    }; 
+  }, []);
+
+  useEffect(() => {
+    const socket = new WebSocket("ws://localhost:4000");
+
+    socket.onopen = () => {
+      console.log("WebSocket connection established");
+    };
+
+    socket.onmessage = (event) => {
+      const { temperature, humidity, brightness } = JSON.parse(event.data);
+      setSensorData({ temperature, humidity, brightness });
+    };
+
+    socket.onclose = () => {
+      console.log("WebSocket connection closed");
+    };
+
+    return () => {
+      socket.close();
     };
   }, []);
 
 
-  const [sensorData, setSensorData] = useState({
-    temperature: randomValue(5, 45),
-    humidity: randomValue(30, 80),
-    brightness: randomValue(0, 100000),
-  });
-
-  useEffect(() => {
-    const intervalId = setInterval(() => {
-      setSensorData({
-        temperature: randomValue(5, 45),
-        humidity: randomValue(30, 80),
-        brightness: randomValue(0, 100000),
-      });
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
-
   const [lightState, setLightState] = useState("Off");
   const [fanState, setFanState] = useState("Off");
 
-  function handleLight() {
-    lightState === "Off" ? setLightState("On") : setLightState("Off");
-  }
+  const handleLight = async () => {
+    setLightState((prevState) => (prevState === "Off" ? "On" : "Off"));
+  };
 
-  function handleFan() {
-    fanState === "Off" ? setFanState("On") : setFanState("Off");
-  }
+  useEffect(() => {
+    const makeApiCall = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/v1/device_control",
+          {
+            params: {
+              device: "light",
+              state: lightState === "Off" ? "0" : "1",
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error making API call:", error);
+      }
+    };
 
-  function randomValue(start, end) {
-    return Math.random() * (end - start) + start;
-  }
+    makeApiCall();
+  }, [lightState]);
+
+  const handleFan = async () => {
+    setFanState((prevState) => (prevState === "Off" ? "On" : "Off"));
+  };
+
+  useEffect(() => {
+    const makeApiCall = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:4000/api/v1/device_control",
+          {
+            params: {
+              device: "fan",
+              state: fanState === "Off" ? "0" : "1",
+            },
+          }
+        );
+        console.log(response);
+      } catch (error) {
+        console.error("Error making API call:", error);
+      }
+    };
+
+    makeApiCall();
+  }, [fanState]);
 
   return (
     <div className="dashboard">
@@ -77,8 +124,7 @@ function Dashboard() {
         <Status name={"brightness"} data={sensorData.brightness} />
       </div>
       <div className="functionsContainer">
-        <StatusChart allData={allData}
-        />
+        <StatusChart allData={allData} />
         <div className="adjustmentContainer">
           <Button onClick={handleFan} name={"Fan"} state={fanState} />
           <Button onClick={handleLight} name={"Light"} state={lightState} />

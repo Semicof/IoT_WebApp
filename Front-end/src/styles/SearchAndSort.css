@@ -6,6 +6,7 @@
     text-indent: 0.5rem;
     margin-bottom: 1rem;
     font-size: 1rem;
+    border-radius: 0.3rem;
 }
 
 #search:focus{
@@ -16,6 +17,17 @@
 #sort{
     margin-bottom: 1rem;
     margin-right: 2rem;
+}
+
+.searchBtn{
+    margin-left: 0.5rem;
+    height: 2rem;
+    width: 2rem;
+    border-radius: 50%;
+    outline: none;
+    border: none;
+    background-color: coral;
+    color: white;
 }
 
 select:focus{

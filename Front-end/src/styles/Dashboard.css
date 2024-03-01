@@ -1,11 +1,12 @@
 .dashboard{
     width: 80%;
     height: 95%;
-    background: url("/imgs/bg/bg.jpg");
+    background: white;
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     border: 1px solid blanchedalmond;
+    border-radius: 0.5rem;
 }
 
 .statusContainer{

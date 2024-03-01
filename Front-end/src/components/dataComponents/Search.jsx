@@ -1,24 +1,26 @@
-import React, { useState, useEffect } from 'react';
-import "../../styles/SearchAndSort.css"
+import React, { useState } from 'react';
+import { FaSearch } from 'react-icons/fa';
+import "../../styles/SearchAndSort.css";
 
-function Search({ searchTerm, setSearchTerm }) {
-  const [inputText, setInputText] = useState(searchTerm);
+function Search({ setSearchTerm, searchResult }) {
+  const [inputText, setInputText] = useState("");
 
-  useEffect(() => {
-    const delayDebounceFn = setTimeout(() => {
-      setSearchTerm(inputText);
-    }, 1000);
+  const handleSearch = () => {
+    setSearchTerm({ time: inputText });
+  };
 
-    return () => clearTimeout(delayDebounceFn);
-  }, [inputText, setSearchTerm]);
-
-  const handleSearch = (e) => {
+  const handleInputChange = (e) => {
     setInputText(e.target.value);
   };
 
   return (
-    <div>
-      <input type="text" id="search" value={inputText} onChange={handleSearch} placeholder='Search here!'/>
+    <div className="search-container">
+      <input type="text" id="search" value={inputText} onChange={handleInputChange} placeholder='Search time here!' />
+      <button onClick={handleSearch} className='searchBtn'>
+        <FaSearch />
+      </button>
+      {searchResult === 'noResults' && <p className="no-results-message">There's nothing that fits your search.</p>}
+      {searchResult === 'loading' && <p className="loading-message">Loading...</p>}
     </div>
   );
 }
