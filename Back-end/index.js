@@ -30,8 +30,18 @@ client.on("connect", () => {
   console.log("Connected to broker!");
 
   client.subscribe("sensor_data", (err) => {
-    if (err) console.log("Subscribe error: " + err);
-    else console.log("Topic ok!");
+    if (err) console.log("Subscribe sensor_data error: " + err);
+    else console.log("Topic sensor_data ok!");
+  });
+
+  client.subscribe("light_data", (err) => {
+    if (err) console.log("Subscribe light_data error: " + err);
+    else console.log("Topic light_data ok!");
+  });
+
+  client.subscribe("fan_data", (err) => {
+    if (err) console.log("Subscribe fan_data error: " + err);
+    else console.log("Topic fan_data ok!");
   });
 });
 
@@ -109,7 +119,6 @@ app.get("/api/v1/action_history", (req, res) => {
   });
 });
 
-
 const PORT = 4000 || process.env.PORT;
 
 const server = app.listen(PORT, () => console.log(`App start on ${PORT}`));
@@ -119,16 +128,15 @@ const handleSensorData = (message, ws) => {
   const [temperature, humidity, brightness] = message.toString().split(",");
   console.log("Sensor data message: " + message.toString());
 
-  const queryString =
-    "INSERT INTO sensor_data (temperature, humidity, brightness) VALUES (?, ?, ?)";
-  db.query(queryString, [temperature, humidity, brightness], (err, result) => {
-    if (err) {
-      console.error("Error saving sensor data to the database:", err);
-      return;
-    }
-    console.log("Sensor data saved to the database");
-
-  });
+  // const queryString =
+  //   "INSERT INTO sensor_data (temperature, humidity, brightness) VALUES (?, ?, ?)";
+  // db.query(queryString, [temperature, humidity, brightness], (err, result) => {
+  //   if (err) {
+  //     console.error("Error saving sensor data to the database:", err);
+  //     return;
+  //   }
+  //   console.log("Sensor data saved to the database");
+  // });
   ws.send(JSON.stringify({ temperature, humidity, brightness }));
 };
 
@@ -141,9 +149,22 @@ wss.on("connection", (ws) => {
 });
 
 client.on("message", (topic, message) => {
-  wss.clients.forEach((ws) => {
-    handleSensorData(message, ws);
-  });
+  if (topic === "sensor_data") {
+    wss.clients.forEach((ws) => {
+      handleSensorData(message, ws);
+    });
+  }
+  if (topic === "light_data") {
+    wss.clients.forEach((ws) => {
+      ws.send(JSON.stringify({light_data:message.toString()}));
+    });
+    
+  }
+  if (topic === "fan_data") {
+    wss.clients.forEach((ws) => {
+      ws.send(JSON.stringify({fan_data:message.toString()}));
+    });
+  }
 });
 
 server.on("upgrade", (request, socket, head) => {

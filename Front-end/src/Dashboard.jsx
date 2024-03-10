@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useDeviceContext } from "./context/DeviceContext";
 import "./styles/Dashboard.css";
 import Button from "./components/dashboardComponents/Button";
 import StatusChart from "./components/dashboardComponents/StatusChart";
@@ -13,16 +14,16 @@ function Dashboard() {
     brightness: 0,
   });
 
+  const {lightState,fanState,setDeviceState} = useDeviceContext();
+
   const fetchData = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:4000/api/v1/get_all"
-      );
+      const response = await axios.get("http://localhost:4000/api/v1/get_all");
       const newData = response.data.map((dataObj) => ({
         temperatureData: dataObj.temperature,
         humidityData: dataObj.humidity,
         brightnessData: dataObj.brightness,
-        date:dataObj.time
+        date: dataObj.time,
       }));
       setAllData(newData);
       console.log(newData);
@@ -38,7 +39,7 @@ function Dashboard() {
 
     return () => {
       clearInterval(intervalId);
-    }; 
+    };
   }, []);
 
   useEffect(() => {
@@ -49,8 +50,18 @@ function Dashboard() {
     };
 
     socket.onmessage = (event) => {
-      const { temperature, humidity, brightness } = JSON.parse(event.data);
-      setSensorData({ temperature, humidity, brightness });
+      const data = JSON.parse(event.data);
+
+      if (data.temperature !== undefined) {
+        const { temperature, humidity, brightness } = data;
+        setSensorData({ temperature, humidity, brightness });
+      } else if (data.light_data !== undefined) {
+        const lightStatus = data.light_data;
+        setDeviceState("light",lightStatus === "1" ? "On" : "Off");
+      } else if (data.fan_data !== undefined) {
+        const fanStatus = data.fan_data;
+        setDeviceState("fan",fanStatus === "1" ? "On" : "Off"); 
+      }
     };
 
     socket.onclose = () => {
@@ -62,59 +73,22 @@ function Dashboard() {
     };
   }, []);
 
-
-  const [lightState, setLightState] = useState("Off");
-  const [fanState, setFanState] = useState("Off");
-
-  const handleLight = async () => {
-    setLightState((prevState) => (prevState === "Off" ? "On" : "Off"));
+  const handleDevices = async (deviceName,deviceState) => {
+    try {
+      const response = await axios.get(
+        "http://localhost:4000/api/v1/device_control",
+        {
+          params: {
+            device: deviceName,
+            state: deviceState,
+          },
+        }
+      );
+      console.log(response);
+    } catch (error) {
+      console.error("Error making API call:", error);
+    }
   };
-
-  useEffect(() => {
-    const makeApiCall = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:4000/api/v1/device_control",
-          {
-            params: {
-              device: "light",
-              state: lightState === "Off" ? "0" : "1",
-            },
-          }
-        );
-        console.log(response);
-      } catch (error) {
-        console.error("Error making API call:", error);
-      }
-    };
-
-    makeApiCall();
-  }, [lightState]);
-
-  const handleFan = async () => {
-    setFanState((prevState) => (prevState === "Off" ? "On" : "Off"));
-  };
-
-  useEffect(() => {
-    const makeApiCall = async () => {
-      try {
-        const response = await axios.get(
-          "http://localhost:4000/api/v1/device_control",
-          {
-            params: {
-              device: "fan",
-              state: fanState === "Off" ? "0" : "1",
-            },
-          }
-        );
-        console.log(response);
-      } catch (error) {
-        console.error("Error making API call:", error);
-      }
-    };
-
-    makeApiCall();
-  }, [fanState]);
 
   return (
     <div className="dashboard">
@@ -126,8 +100,8 @@ function Dashboard() {
       <div className="functionsContainer">
         <StatusChart allData={allData} />
         <div className="adjustmentContainer">
-          <Button onClick={handleFan} name={"Fan"} state={fanState} />
-          <Button onClick={handleLight} name={"Light"} state={lightState} />
+          <Button onClick={()=>handleDevices("fan",fanState==="On"?"0":"1")} name={"Fan"} state={fanState} />
+          <Button onClick={()=>handleDevices("light",lightState==="On"?"0":"1")} name={"Light"} state={lightState} />
         </div>
       </div>
     </div>
