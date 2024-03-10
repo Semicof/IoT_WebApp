@@ -27,7 +27,7 @@ ChartJS.register(
 );
 
 const StatusChart = ({ allData }) => {
-  const latestData = allData.slice(-20);
+  const latestData = allData.slice(-5);
   const options = {
     responsive: true,
     plugins: {

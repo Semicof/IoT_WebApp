@@ -32,9 +32,9 @@ function getStatusGradient(value, name) {
       high: "linear-gradient(319deg, #0000FF 0%, #1E90FF 37%, #FFFFFF 100%)",
     },
     brightness: {
-      low: "linear-gradient(319deg, #FFD700 0%, #FFEA00 37%, #FFFFFF 100%)",
+      high: "linear-gradient(319deg, #FFD700 0%, #FFEA00 37%, #FFFFFF 100%)",
       medium: "linear-gradient(319deg, #FFC300 0%, #FFD700 37%, #FFFFFF 100%)",
-      high: "linear-gradient(319deg, #FFA500 0%, #FFC300 37%, #FFFFFF 100%)",
+      low: "linear-gradient(319deg, #FFA500 0%, #FFC300 37%, #FFFFFF 100%)",
     },
   };
 

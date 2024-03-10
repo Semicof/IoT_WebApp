@@ -106,7 +106,7 @@ const PaginationTable = ({ endpoint, headers}) => {
                   {headers.map((header) => (
                     <th key={header} onClick={() => handleSortChange(header)}>
                       {header}
-                      {header === 'id' || header === 'time' ? getSortIcon(header) : null}
+                      {header.toLowerCase() === 'id' || header.toLowerCase() === 'time' ? getSortIcon(header) : null}
                     </th>
                   ))}
                 </tr>

@@ -119,17 +119,16 @@ const handleSensorData = (message, ws) => {
   const [temperature, humidity, brightness] = message.toString().split(",");
   console.log("Sensor data message: " + message.toString());
 
-  // const queryString =
-  //   "INSERT INTO sensor_data (temperature, humidity, brightness) VALUES (?, ?, ?)";
-  // db.query(queryString, [temperature, humidity, brightness], (err, result) => {
-  //   if (err) {
-  //     console.error("Error saving sensor data to the database:", err);
-  //     return;
-  //   }
+  const queryString =
+    "INSERT INTO sensor_data (temperature, humidity, brightness) VALUES (?, ?, ?)";
+  db.query(queryString, [temperature, humidity, brightness], (err, result) => {
+    if (err) {
+      console.error("Error saving sensor data to the database:", err);
+      return;
+    }
+    console.log("Sensor data saved to the database");
 
-  //   console.log("Sensor data saved to the database");
-
-  // });
+  });
   ws.send(JSON.stringify({ temperature, humidity, brightness }));
 };
 
