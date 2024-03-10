@@ -5,11 +5,13 @@ import ActionHistory from "./ActionHistory.jsx";
 import SensorData from "./SensorData.jsx";
 import Profile from "./Profile.jsx";
 import Navbar from './Navbar.jsx';
+import { DeviceProvider } from './context/DeviceContext.jsx';
 import "./styles/App.css";
 
 function App() {
   return (
     <>
+    <DeviceProvider>
     <Navbar/>
     <div className='main'>
         <Routes>
@@ -19,6 +21,7 @@ function App() {
             <Route element={<Profile/>} path="/profile"/>
         </Routes>
     </div>
+    </DeviceProvider>
     </>
   )
 }

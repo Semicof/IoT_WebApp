@@ -2,8 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../../styles/Button.css";
 function Button({ onClick, name, state }) {
   const [imgSrc, setImgSrc] = useState("");
-  const [label, setLabel] = useState("On");
-  const [backgroundColor, setBackgroundColor]  = useState("#999");
+  const [label, setLabel] = useState("Off");
+  const [backgroundColor, setBackgroundColor]  = useState("coral");
   switch (name) {
     case "Fan":
       useEffect(() => {
