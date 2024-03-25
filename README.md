@@ -40,7 +40,7 @@ npm run dev
 ## Usage
 ### Dashboard screen
 ![image](https://github.com/Semicof/IoT_WebApp/assets/91484227/c8a5ee7f-1beb-447a-95f2-118b05ac3f11)
-### Sensor hata screen
+### Sensor data screen
 ![image](https://github.com/Semicof/IoT_WebApp/assets/91484227/f6c13c4e-0e7b-4930-b759-0e5f0e158d13)
 ### Action history screen
 ![image](https://github.com/Semicof/IoT_WebApp/assets/91484227/502040c5-d87e-4f06-a43b-87d00fc68a60)
