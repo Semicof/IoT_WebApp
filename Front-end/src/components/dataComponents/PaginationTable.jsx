@@ -12,6 +12,7 @@ const PaginationTable = ({ endpoint, headers}) => {
   const [sortOption, setSortOption] = useState("id");
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchResult, setSearchResult] = useState(null);
+  const limit = 10;
 
   useEffect(() => {
     fetchData();
@@ -25,6 +26,7 @@ const PaginationTable = ({ endpoint, headers}) => {
         {
           params: {
             page: currentPage,
+            limit:limit,
             searchTerm: searchTerm.time,
             sort: sortOption,
             order: sortOrder,
@@ -55,6 +57,7 @@ const PaginationTable = ({ endpoint, headers}) => {
           {
             params: {
               page: newPage,
+              limit:limit,
               searchTerm: searchTerm.time,
               sort: sortOption,
               order: sortOrder,
@@ -106,7 +109,7 @@ const PaginationTable = ({ endpoint, headers}) => {
                   {headers.map((header) => (
                     <th key={header} onClick={() => handleSortChange(header)}>
                       {header}
-                      {header.toLowerCase() === 'id' || header.toLowerCase() === 'time' ? getSortIcon(header) : null}
+                      {header.toLowerCase() === 'id' || header.toLowerCase() === 'time'|| header.toLowerCase() === 'temperature'|| header.toLowerCase() === 'humidity'|| header.toLowerCase() === 'brightness' ? getSortIcon(header) : null}
                     </th>
                   ))}
                 </tr>

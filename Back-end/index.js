@@ -17,12 +17,12 @@ const db = mysql.createConnection({
   database: "iot",
 });
 
-const brokerURL = "mqtt://192.168.2.9:1886";
+const brokerURL = "mqtt://192.168.190.1:1886";
 const options = {
   clientId: "semicof-client",
   username: "semicof",
   password: "2002",
-};
+}; 
 
 const client = mqtt.connect(brokerURL, options);
 
@@ -73,19 +73,21 @@ app.get("/api/v1/device_control", (req, res) => {
   handleDevice(msg, device);
 });
 
-app.get("/api/v1/get_all", (req, res) => {
-  const query = "SELECT * FROM sensor_data";
+app.get("/api/v1/get_chart_data", (req, res) => {
+  const limit = req.query.limit || 10;
+  const offset = req.query.offset || 0;
+  const query = `SELECT * FROM sensor_data ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`
   db.query(query, (err, result) => {
     if (err) return res.json(err);
     return res.json(result);
   });
 });
 
-const recordsPerPage = 10;
 
-app.get("/api/v1/sensor_data", (req, res) => {
+app.get("/api/v1/get_sensor_data", (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const offset = (page - 1) * recordsPerPage;
+  const limit = req.query.limit || 10;
+  const offset = (page - 1) * limit;
   const sortColumn = req.query.sort || "id";
   const sortOrder = req.query.order || "ASC";
   const searchTerm = req.query.searchTerm || "";
@@ -93,17 +95,18 @@ app.get("/api/v1/sensor_data", (req, res) => {
   const query = `SELECT * FROM sensor_data
                 WHERE time LIKE "%${searchTerm}%"
                 ORDER BY ${sortColumn} ${sortOrder}
-                LIMIT ${recordsPerPage} OFFSET ${offset}`;
-
+                LIMIT ${limit} OFFSET ${offset}`;
+ 
   db.query(query, (err, result) => {
     if (err) return res.json(err);
     return res.json(result);
   });
 });
 
-app.get("/api/v1/action_history", (req, res) => {
+app.get("/api/v1/get_action_history", (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const offset = (page - 1) * recordsPerPage;
+  const limit = req.query.limit || 10;
+  const offset = (page - 1) * limit;
   const sortColumn = req.query.sort || "id";
   const sortOrder = req.query.order || "ASC";
   const searchTerm = req.query.searchTerm || "";
@@ -111,7 +114,7 @@ app.get("/api/v1/action_history", (req, res) => {
   const query = `SELECT * FROM action_history
                 WHERE time LIKE "%${searchTerm}%"
                 ORDER BY ${sortColumn} ${sortOrder}
-                LIMIT ${recordsPerPage} OFFSET ${offset}`;
+                LIMIT ${limit} OFFSET ${offset}`;
 
   db.query(query, (err, result) => {
     if (err) return res.json(err);
@@ -128,15 +131,15 @@ const handleSensorData = (message, ws) => {
   const [temperature, humidity, brightness] = message.toString().split(",");
   console.log("Sensor data message: " + message.toString());
 
-  // const queryString =
-  //   "INSERT INTO sensor_data (temperature, humidity, brightness) VALUES (?, ?, ?)";
-  // db.query(queryString, [temperature, humidity, brightness], (err, result) => {
-  //   if (err) {
-  //     console.error("Error saving sensor data to the database:", err);
-  //     return;
-  //   }
-  //   console.log("Sensor data saved to the database");
-  // });
+  const queryString =
+    "INSERT INTO sensor_data (temperature, humidity, brightness) VALUES (?, ?, ?)";
+  db.query(queryString, [temperature, humidity, brightness], (err, result) => {
+    if (err) {
+      console.error("Error saving sensor data to the database:", err);
+      return;
+    }
+    console.log("Sensor data saved to the database");
+  });
   ws.send(JSON.stringify({ temperature, humidity, brightness }));
 };
 

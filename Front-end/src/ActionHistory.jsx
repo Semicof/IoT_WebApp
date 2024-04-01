@@ -7,7 +7,7 @@ function ActionHistory() {
   return (
     <div className="container">
       <PaginationTable
-        endpoint={"action_history"}
+        endpoint={"get_action_history"}
         headers={["ID", "Device", "Action", "Time"]}
       />
     </div>
