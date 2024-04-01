@@ -7,7 +7,7 @@ function SensorData() {
   return (
     <div className="container">
       <PaginationTable
-        endpoint={"sensor_data"}
+        endpoint={"get_sensor_data"}
         headers={["ID", "Temperature", "Humidity", "Brightness", "Time"]}
       />
     </div>

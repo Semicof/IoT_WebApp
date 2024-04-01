@@ -14,11 +14,21 @@ function Dashboard() {
     brightness: 0,
   });
 
+  const limit = 10;
+  const offset = 0;
+
   const {lightState,fanState,setDeviceState} = useDeviceContext();
 
   const fetchData = async () => {
     try {
-      const response = await axios.get("http://localhost:4000/api/v1/get_all");
+      const response = await axios.get("http://localhost:4000/api/v1/get_chart_data",
+      {
+        params: {
+          limit:limit,
+          offset:offset
+        }
+      }
+      );
       const newData = response.data.map((dataObj) => ({
         temperatureData: dataObj.temperature,
         humidityData: dataObj.humidity,

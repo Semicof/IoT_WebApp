@@ -27,7 +27,6 @@ ChartJS.register(
 );
 
 const StatusChart = ({ allData }) => {
-  const latestData = allData.slice(-5);
   const options = {
     responsive: true,
     plugins: {
@@ -78,17 +77,17 @@ const StatusChart = ({ allData }) => {
       },
     },
   };
-  const temperatureData = latestData.map((data) => ({
+  const temperatureData = allData.map((data) => ({
     timestamp: data.date,
     value: data.temperatureData,
   }));
 
-  const humidityData = latestData.map((data) => ({
+  const humidityData = allData.map((data) => ({
     timestamp: data.date,
     value: data.humidityData,
   }));
 
-  const brightnessData = latestData.map((data) => ({
+  const brightnessData = allData.map((data) => ({
     timestamp: data.date,
     value: data.brightnessData,
   }));
