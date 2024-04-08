@@ -35,5 +35,15 @@ select:focus{
 }
 
 #order{
+    
+}
 
+.searchColumn{
+    height: 2rem;
+    margin: 0 1rem;
+    border-radius: 0.3rem;
+}
+
+.searchColumn:focus{
+    outline: none;
 }

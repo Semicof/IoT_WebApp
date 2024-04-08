@@ -1,28 +1,89 @@
-import React, { useState } from 'react';
-import { FaSearch } from 'react-icons/fa';
+import React, { useState } from "react";
+import { FaSearch } from "react-icons/fa";
 import "../../styles/SearchAndSort.css";
 
-function Search({ setSearchTerm, searchResult }) {
+function Search({
+  setSearchTerm,
+  searchResult,
+  setSearchColumn,
+  tableName
+}) {
   const [inputText, setInputText] = useState("");
 
   const handleSearch = () => {
-    setSearchTerm({ time: inputText });
+    setSearchTerm(inputText);
   };
 
   const handleInputChange = (e) => {
     setInputText(e.target.value);
   };
 
-  return (
+  const handleTypeSearch = (e)=>{
+    setSearchColumn(e.target.value)
+  }
+
+  return tableName==="get_sensor_data"?(
     <div className="search-container">
-      <input type="text" id="search" value={inputText} onChange={handleInputChange} placeholder='Search time here!' />
-      <button onClick={handleSearch} className='searchBtn'>
+      <input
+        type="text"
+        id="search"
+        value={inputText}
+        onChange={handleInputChange}
+        placeholder="Search here!"
+      />
+      <select className="searchColumn" onChange={handleTypeSearch}>
+        <option selected value="all">
+          All
+        </option>
+        <option value="id">ID</option>
+        <option value="temperature">Temperature</option>
+        <option value="humidity">Humidity</option>
+        <option value="brightness">Brightness</option>
+        <option value="time">Time</option>
+      </select>
+      <button onClick={handleSearch} className="searchBtn">
         <FaSearch />
       </button>
-      {searchResult === 'noResults' && <p className="no-results-message">There's nothing that fits your search.</p>}
-      {searchResult === 'loading' && <p className="loading-message">Loading...</p>}
+      {searchResult === "noResults" && (
+        <p className="no-results-message">
+          There's nothing that fits your search.
+        </p>
+      )}
+      {searchResult === "loading" && (
+        <p className="loading-message">Loading...</p>
+      )}
     </div>
-  );
+  ) : (
+    <div className="search-container">
+      <input
+        type="text"
+        id="search"
+        value={inputText}
+        onChange={handleInputChange}
+        placeholder="Search here!"
+      />
+      <select className="searchColumn" onChange={handleTypeSearch}>
+        <option selected value="all">
+          All
+        </option>
+        <option value="id">ID</option>
+        <option value="device">Device</option>
+        <option value="action">Action</option>
+        <option value="time">Time</option>
+      </select>
+      <button onClick={handleSearch} className="searchBtn">
+        <FaSearch />
+      </button>
+      {searchResult === "noResults" && (
+        <p className="no-results-message">
+          There's nothing that fits your search.
+        </p>
+      )}
+      {searchResult === "loading" && (
+        <p className="loading-message">Loading...</p>
+      )}
+    </div>
+  )
 }
 
 export default Search;
