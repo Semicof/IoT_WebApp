@@ -22,7 +22,7 @@ const options = {
   clientId: "semicof-client",
   username: "semicof",
   password: "2002",
-}; 
+};
 
 const client = mqtt.connect(brokerURL, options);
 
@@ -76,27 +76,37 @@ app.get("/api/v1/device_control", (req, res) => {
 app.get("/api/v1/get_chart_data", (req, res) => {
   const limit = req.query.limit || 10;
   const offset = req.query.offset || 0;
-  const query = `SELECT * FROM sensor_data ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`
+  const query = `SELECT * FROM sensor_data ORDER BY id DESC LIMIT ${limit} OFFSET ${offset}`;
   db.query(query, (err, result) => {
     if (err) return res.json(err);
     return res.json(result);
   });
 });
 
-
 app.get("/api/v1/get_sensor_data", (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const limit = req.query.limit || 10;
   const offset = (page - 1) * limit;
+  const searchColumn = req.query.searchColumn || "all";
   const sortColumn = req.query.sort || "id";
   const sortOrder = req.query.order || "ASC";
   const searchTerm = req.query.searchTerm || "";
 
-  const query = `SELECT * FROM sensor_data
-                WHERE time LIKE "%${searchTerm}%"
+  const query =
+    searchColumn !== "all"
+      ? `SELECT * FROM sensor_data
+                WHERE ${searchColumn} LIKE "%${searchTerm}%"
                 ORDER BY ${sortColumn} ${sortOrder}
-                LIMIT ${limit} OFFSET ${offset}`;
- 
+                LIMIT ${limit} OFFSET ${offset}`
+      : `SELECT * FROM sensor_data
+      WHERE time LIKE "%${searchTerm}%" 
+      OR temperature LIKE "%${searchTerm}%" 
+      OR humidity LIKE "%${searchTerm}%" 
+      OR brightness LIKE "%${searchTerm}%"
+      OR id LIKE "%${searchTerm}%" 
+      ORDER BY ${sortColumn} ${sortOrder}
+      LIMIT ${limit} OFFSET ${offset}`;
+
   db.query(query, (err, result) => {
     if (err) return res.json(err);
     return res.json(result);
@@ -109,12 +119,21 @@ app.get("/api/v1/get_action_history", (req, res) => {
   const offset = (page - 1) * limit;
   const sortColumn = req.query.sort || "id";
   const sortOrder = req.query.order || "ASC";
+  const searchColumn = req.query.searchColumn || "all";
   const searchTerm = req.query.searchTerm || "";
 
-  const query = `SELECT * FROM action_history
-                WHERE time LIKE "%${searchTerm}%"
+  const query = searchColumn !== "all"
+    ? `SELECT * FROM action_history
+                WHERE ${searchColumn} LIKE "%${searchTerm}%"
                 ORDER BY ${sortColumn} ${sortOrder}
-                LIMIT ${limit} OFFSET ${offset}`;
+                LIMIT ${limit} OFFSET ${offset}`
+    : `SELECT * FROM action_history
+      WHERE time LIKE "%${searchTerm}%" 
+      OR device LIKE "%${searchTerm}%" 
+      OR action LIKE "%${searchTerm}%" 
+      OR id LIKE "%${searchTerm}%" 
+      ORDER BY ${sortColumn} ${sortOrder}
+      LIMIT ${limit} OFFSET ${offset}`;
 
   db.query(query, (err, result) => {
     if (err) return res.json(err);
@@ -159,13 +178,12 @@ client.on("message", (topic, message) => {
   }
   if (topic === "light_data") {
     wss.clients.forEach((ws) => {
-      ws.send(JSON.stringify({light_data:message.toString()}));
+      ws.send(JSON.stringify({ light_data: message.toString() }));
     });
-    
   }
   if (topic === "fan_data") {
     wss.clients.forEach((ws) => {
-      ws.send(JSON.stringify({fan_data:message.toString()}));
+      ws.send(JSON.stringify({ fan_data: message.toString() }));
     });
   }
 });

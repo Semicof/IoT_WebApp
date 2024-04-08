@@ -4,19 +4,20 @@ import { FaSortAmountDown, FaSortAmountUp } from "react-icons/fa";
 import "../../styles/PaginationTable.css";
 import Search from "./Search";
 
-const PaginationTable = ({ endpoint, headers}) => {
+const PaginationTable = ({ endpoint, headers }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState({ time: "" });
+  const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("id");
   const [sortOrder, setSortOrder] = useState("asc");
   const [searchResult, setSearchResult] = useState(null);
+  const [searchColumn, setSearchColumn] = useState("id");
   const limit = 10;
 
   useEffect(() => {
     fetchData();
-  }, [currentPage, searchTerm, sortOption, sortOrder]);
+  }, [currentPage, searchTerm, sortOption, sortOrder, searchColumn]);
 
   const fetchData = async () => {
     try {
@@ -26,20 +27,21 @@ const PaginationTable = ({ endpoint, headers}) => {
         {
           params: {
             page: currentPage,
-            limit:limit,
-            searchTerm: searchTerm.time,
+            limit: limit,
+            searchTerm: searchTerm,
             sort: sortOption,
             order: sortOrder,
+            searchColumn: searchColumn,
           },
         }
       );
 
       if (response.data.length > 0) {
         setData(response.data);
-        setSearchResult('data');
+        setSearchResult("data");
       } else {
         setData([]);
-        setSearchResult('noResults');
+        setSearchResult("noResults");
       }
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -57,10 +59,11 @@ const PaginationTable = ({ endpoint, headers}) => {
           {
             params: {
               page: newPage,
-              limit:limit,
-              searchTerm: searchTerm.time,
+              limit: limit,
+              searchTerm: searchTerm,
               sort: sortOption,
               order: sortOrder,
+              searchColumn: searchColumn,
             },
           }
         );
@@ -96,70 +99,80 @@ const PaginationTable = ({ endpoint, headers}) => {
 
   return (
     <div>
-      <Search setSearchTerm={setSearchTerm} searchResult={searchResult} />
+      <Search
+        setSearchTerm={setSearchTerm}
+        searchResult={searchResult}
+        setSearchColumn={setSearchColumn}
+        tableName={endpoint}
+      />
       {loading ? (
         <p>Loading...</p>
       ) : (
         <>
-        <div className="tableContainer">
-          {searchResult === 'data' ? (
-            <table className="myTable">
-              <thead>
-                <tr>
-                  {headers.map((header) => (
-                    <th key={header} onClick={() => handleSortChange(header)}>
-                      {header}
-                      {header.toLowerCase() === 'id' || header.toLowerCase() === 'time'|| header.toLowerCase() === 'temperature'|| header.toLowerCase() === 'humidity'|| header.toLowerCase() === 'brightness' ? getSortIcon(header) : null}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {data.map((item) => (
-                  <tr key={item.id}>
+          <div className="tableContainer">
+            {searchResult === "data" ? (
+              <table className="myTable">
+                <thead>
+                  <tr>
                     {headers.map((header) => (
-                      <td key={header}>
-                        {header.toLowerCase() === "time"
-                          ? new Date(item[header.toLowerCase()]).toLocaleString(
-                              "vi-VN",
-                              {
+                      <th key={header} onClick={() => handleSortChange(header)}>
+                        {header}
+                        {header.toLowerCase() === "id" ||
+                        header.toLowerCase() === "time" ||
+                        header.toLowerCase() === "temperature" ||
+                        header.toLowerCase() === "humidity" ||
+                        header.toLowerCase() === "brightness"
+                          ? getSortIcon(header)
+                          : null}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {data.map((item) => (
+                    <tr key={item.id}>
+                      {headers.map((header) => (
+                        <td key={header}>
+                          {header.toLowerCase() === "time"
+                            ? new Date(
+                                item[header.toLowerCase()]
+                              ).toLocaleString("vi-VN", {
                                 year: "numeric",
                                 month: "2-digit",
                                 day: "2-digit",
                                 hour: "2-digit",
                                 minute: "2-digit",
                                 second: "2-digit",
-                              }
-                            )
-                          : header.toLowerCase() === "temperature" ||
-                            header.toLowerCase() === "humidity" ||
-                            header.toLowerCase() === "brightness"
-                          ? `${item[header.toLowerCase()]} ${getUnit(
-                              header.toLowerCase()
-                            )}`
-                          : item[header.toLowerCase()]}
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : searchResult === 'noResults' ? (
-            <p>No results found.</p>
-          ) : (
-            <p>Error fetching data.</p>
-          )}
-          <div className="paginationButtons">
-            <button onClick={() => handlePageChange(currentPage - 1)}>
-              &#10094;
-            </button>
-            <span>Page {currentPage}</span>
-            <button onClick={() => handlePageChange(currentPage + 1)}>
-              &#10095;
-            </button>
+                              })
+                            : header.toLowerCase() === "temperature" ||
+                              header.toLowerCase() === "humidity" ||
+                              header.toLowerCase() === "brightness"
+                            ? `${item[header.toLowerCase()]} ${getUnit(
+                                header.toLowerCase()
+                              )}`
+                            : item[header.toLowerCase()]}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : searchResult === "noResults" ? (
+              <p>No results found.</p>
+            ) : (
+              <p>Error fetching data.</p>
+            )}
+            <div className="paginationButtons">
+              <button onClick={() => handlePageChange(currentPage - 1)}>
+                &#10094;
+              </button>
+              <span>Page {currentPage}</span>
+              <button onClick={() => handlePageChange(currentPage + 1)}>
+                &#10095;
+              </button>
+            </div>
           </div>
-        </div>
-      </>
+        </>
       )}
     </div>
   );
