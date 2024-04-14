@@ -17,7 +17,7 @@ const db = mysql.createConnection({
   database: "iot",
 });
 
-const brokerURL = "mqtt://192.168.190.1:1886";
+const brokerURL = "mqtt://192.168.2.12:1886";
 const options = {
   clientId: "semicof-client",
   username: "semicof",
