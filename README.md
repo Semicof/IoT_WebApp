@@ -44,7 +44,7 @@ Now you can use the command:
 mosquitto_passwd -b passwordfile_link user password
 ```
 to add additional users to the file.
-The password file after I create one user and add another user :
+The password file after I created one user and added another user :
 ![image](https://github.com/Semicof/IoT_WebApp/assets/91484227/09be8188-aa7b-47e1-b3df-a5291d1146c4)
 ##### Arduino:
 - Connect device to your computer.
