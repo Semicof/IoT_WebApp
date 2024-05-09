@@ -10,7 +10,7 @@ const PaginationTable = ({ endpoint, headers }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [sortOption, setSortOption] = useState("id");
-  const [sortOrder, setSortOrder] = useState("asc");
+  const [sortOrder, setSortOrder] = useState("desc");
   const [searchResult, setSearchResult] = useState(null);
   const [searchColumn, setSearchColumn] = useState("id");
   const limit = 10;
@@ -86,7 +86,7 @@ const PaginationTable = ({ endpoint, headers }) => {
       setSortOrder(sortOrder === "asc" ? "desc" : "asc");
     } else {
       setSortOption(column);
-      setSortOrder("asc");
+      setSortOrder("desc");
     }
   };
 

@@ -9,7 +9,7 @@ require("dotenv").config();
 const app = express();
 app.use(express.json());
 app.use(cors());
-
+ 
 const db = mysql.createConnection({
   host: "localhost",
   user: "root",
@@ -18,6 +18,8 @@ const db = mysql.createConnection({
 });
 
 const brokerURL = "mqtt://192.168.2.12:1886";
+
+
 const options = {
   clientId: "semicof-client",
   username: "semicof",
@@ -54,7 +56,6 @@ client.on("error", (err) => {
 });
 
 function handleDevice(msg, device) {
-  console.log(msg + "1");
   client.publish(`device/${device}`, msg, (err) => {
     if (err) {
       console.log("Publish error: " + err);
@@ -89,7 +90,7 @@ app.get("/api/v1/get_sensor_data", (req, res) => {
   const offset = (page - 1) * limit;
   const searchColumn = req.query.searchColumn || "all";
   const sortColumn = req.query.sort || "id";
-  const sortOrder = req.query.order || "ASC";
+  const sortOrder = req.query.order || "DESC";
   const searchTerm = req.query.searchTerm || "";
 
   const query =
@@ -118,7 +119,7 @@ app.get("/api/v1/get_action_history", (req, res) => {
   const limit = req.query.limit || 10;
   const offset = (page - 1) * limit;
   const sortColumn = req.query.sort || "id";
-  const sortOrder = req.query.order || "ASC";
+  const sortOrder = req.query.order || "DESC";
   const searchColumn = req.query.searchColumn || "all";
   const searchTerm = req.query.searchTerm || "";
 
