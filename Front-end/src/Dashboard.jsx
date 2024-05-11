@@ -8,16 +8,12 @@ import axios from "axios";
 
 function Dashboard() {
   const [allData, setAllData] = useState([]);
-  const [sensorData, setSensorData] = useState({
-    temperature: 0,
-    humidity: 0,
-    brightness: 0,
-  });
+  
 
   const limit = 10;
   const offset = 0;
 
-  const {lightState,fanState,setDeviceState} = useDeviceContext();
+  const {lightState,fanState,sensorData} = useDeviceContext();
 
   const fetchData = async () => {
     try {
@@ -52,36 +48,6 @@ function Dashboard() {
     };
   }, []);
 
-  useEffect(() => {
-    const socket = new WebSocket("ws://localhost:4000");
-
-    socket.onopen = () => {
-      console.log("WebSocket connection established");
-    };
-
-    socket.onmessage = (event) => {
-      const data = JSON.parse(event.data);
-
-      if (data.temperature !== undefined) {
-        const { temperature, humidity, brightness } = data;
-        setSensorData({ temperature, humidity, brightness });
-      } else if (data.light_data !== undefined) {
-        const lightStatus = data.light_data;
-        setDeviceState("light",lightStatus === "1" ? "On" : "Off");
-      } else if (data.fan_data !== undefined) {
-        const fanStatus = data.fan_data;
-        setDeviceState("fan",fanStatus === "1" ? "On" : "Off"); 
-      }
-    };
-
-    socket.onclose = () => {
-      console.log("WebSocket connection closed");
-    };
-
-    return () => {
-      socket.close();
-    };
-  }, []);
 
   const handleDevices = async (deviceName,deviceState) => {
     try {
@@ -106,6 +72,7 @@ function Dashboard() {
         <Status name={"temperature"} data={sensorData.temperature} />
         <Status name={"humidity"} data={sensorData.humidity} />
         <Status name={"brightness"} data={sensorData.brightness} />
+        
       </div>
       <div className="functionsContainer">
         <StatusChart allData={allData} />

@@ -8,7 +8,7 @@ import Navbar from './Navbar.jsx';
 import { DeviceProvider } from './context/DeviceContext.jsx';
 import "./styles/App.css";
 
-function App() {
+function App() { 
   return (
     <>
     <DeviceProvider>
